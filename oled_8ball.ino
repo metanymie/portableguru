@@ -153,7 +153,7 @@ void loop() {
   (! digitalRead(BUTTON_A));
   (! digitalRead(BUTTON_A));
 
-  if ((millis() - newTimer >= 5000) && (millis() - newTimer <= 5100)) {
+  if ((millis() - newTimer >= 10000) && (millis() - newTimer <= 10100)) {
     display.clearDisplay();
     display.display();
     display.setCursor(0, 0);                       //Reset the cursor position
