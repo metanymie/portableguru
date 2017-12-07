@@ -2,11 +2,13 @@
 #include <Wire.h> //to communicate with I2C / TWI devices
 #include <Adafruit_GFX.h> //graphics lib
 #include <Adafruit_SSD1306.h> //oled screen lib
-#include <ArduinoHttpClient.h>
-#include <WiFi101.h>
+#include <ArduinoHttpClient.h> // for accessing the json server
+#include <WiFi101.h> //to connect to wifi
 #include <ArduinoJson.h> //json library
 
-Adafruit_SSD1306 display = Adafruit_SSD1306();                                                                  //This is all OLED Wing code
+#include <Fonts/TomThumb.h> //smaller font for longer advice
+
+Adafruit_SSD1306 display = Adafruit_SSD1306();                //This is all OLED Wing code
 
 // M0 to oled screen button pins
 #define BUTTON_A 9
@@ -22,13 +24,14 @@ int advice;                           //int to pull from our list of useful/less
 bool push;                            //bool for 1 button push
 long timer = 0;                          //timer to clear screen after being inactive for 1min
 long newTimer = 0;
+long startupT = 0;
 
-//static char ssid[] = "ocadu-embedded";      //SSID of the wireless network
+//static char ssid[] = "ocadu-embedded";      //SSID of the wireless network at school
 //static char pass[] = "internetofthings";
-static char ssid[] = "SmartRG-ffb6";      //SSID of the wireless network
+static char ssid[] = "SmartRG-ffb6";      //SSID of the wireless network at Roxanne's place
 static char pass[] = "3d369c7eb6";
 
-char serverAddress[] = "cdn.rawgit.com";  // server address
+char serverAddress[] = "raw.githubusercontent.com";  // server address
 int port = 80;
 
 WiFiClient wifi;
@@ -46,17 +49,19 @@ String sentence[] = {
   "punctuation"
 };
 
-String json; 
+String json;
 
 void setup() {
   Serial.begin(9600);
-//  while (!Serial) {
-//    ;
-//  }
+  //  while (!Serial) {
+  //    ;
+  //  }
 
   WiFi.setPins(8, 7, 4, 2); //This is specific to the feather M0
 
   /***************************** OLED STUFF *****************************/
+
+  display.setFont(&TomThumb);
 
   Serial.println("OLED FeatherWing test");              // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);            // initialize with the I2C addr 0x3C (for the 128x32)
@@ -75,11 +80,11 @@ void setup() {
   pinMode(BUTTON_B, INPUT_PULLUP);
   pinMode(BUTTON_C, INPUT_PULLUP);
 
+  startupT = millis();
 
+  //connection to wifi
 
-  //connection tot wifi
-
-  while ( status != WL_CONNECTED) {
+  while (status != WL_CONNECTED && millis() - startupT <= 10000) {
     Serial.print("Attempting to connect to Network named: ");
 
     Serial.println(ssid);                   // print the network name (SSID);
@@ -101,6 +106,7 @@ void setup() {
   //get the json from webserver
 
   json = GetJson();
+
   //init random seed
 
   randomSeed(analogRead(0));
@@ -110,14 +116,14 @@ void setup() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   display.print("Ask me for advice");
-  display.setCursor(0, 20);                                                                   //Set the question (Subject to change, possibly personalize?)
+  display.setCursor(0, 20);                          //Set the question (Subject to change, possibly personalize?)
 }
 
 
 void loop() {
 
 
-  if (! digitalRead(BUTTON_A)) ask();                                                         //If any of the buttons are pushed, ask for advice
+  if (! digitalRead(BUTTON_A)) ask();               //If any of the buttons are pushed, ask for advice
 
   if (! digitalRead(BUTTON_B)) ask();
 
@@ -127,7 +133,7 @@ void loop() {
   yield();
   display.display();
 
-  if (digitalRead(BUTTON_A) == LOW) {                                                             // boolean functions to limit all the buttons to push = 1 value
+  if (digitalRead(BUTTON_A) == LOW) {                 // boolean functions to limit all the buttons to push = 1 value
     delay(100);
     push = !push;
     digitalWrite(BUTTON_A, push);
@@ -150,9 +156,9 @@ void loop() {
   if ((millis() - newTimer >= 5000) && (millis() - newTimer <= 5100)) {
     display.clearDisplay();
     display.display();
-    display.setCursor(0, 0);                                                  //Reset the cursor position
-    display.print("Ask me for advice");                                       //Reprint the question (Should always be shown)
-    display.setCursor(0, 20);                                                 //Set the cursor position for the answer
+    display.setCursor(0, 0);                       //Reset the cursor position
+    display.print("Ask me for advice");           //Reprint the question (Should always be shown)
+    display.setCursor(0, 20);                     //Set the cursor position for the answer
   }
 
 }
@@ -162,21 +168,42 @@ void ask() {
 
   timer = millis();
 
-  display.clearDisplay();                                                   //If there has been previous advice,
+  display.clearDisplay();                         //If there has been previous advice,
   display.display();
-  display.setCursor(0, 0);                                                  //Reset the cursor position
-  //display.print("Ask me for advice");                                       //Reprint the question (Should always be shown)
-  display.setCursor(0, 0);                                                 //Set the cursor position for the answer
+  display.setCursor(0, 0);                       //Set the cursor position for the answer
 
-  
-  display.print("LOL" + randomAdvice());
+  if (status = WL_CONNECTED) {
+    display.print(randomAdvice());
+  }
+  else
+  { advice = round(random(0, 6));                                              //randomise what advice is called
+
+    if (advice == 0) {
+      display.print("Hell Yeah!");                                                 //advice should be limited to 21char
+    }
+    if (advice == 1) {
+      display.print("That's a bad idea....");
+    }
+    if (advice == 2) {
+      display.print("What why?");
+    }
+    if (advice == 3) {
+      display.print("Go for a beer instead");                                                 //advice should be limited to 21char
+    }
+    if (advice == 4) {
+      display.print("Go back to bed");
+    }
+    if (advice == 5) {
+      display.print("What would Batman do?");
+    }
+  }
 
   if (millis() - timer >= 5000) {
     display.clearDisplay();
     display.display();
-    display.setCursor(0, 0);                                                  //Reset the cursor position
-    display.print("Ask me for advice");                                       //Reprint the question (Should always be shown)
-    display.setCursor(0, 20);                                                 //Set the cursor position for the answer
+    display.setCursor(0, 0);                     //Reset the cursor position
+    display.print("Ask me for advice");         //Reprint the question (Should always be shown)
+    display.setCursor(0, 20);                   //Set the cursor position for the answer
 
   }
   newTimer = millis();
@@ -199,7 +226,7 @@ String randomAdvice() {
     String test = root[sentence[i]];
     Serial.println(test);
     answer += RandomInArray(actionArray) + " ";
-    
+
   }
   return answer;
 }
@@ -207,7 +234,7 @@ String randomAdvice() {
 
 String GetJson() {
   Serial.println("making GET request");
-  client.get("/DFstop/7da25750ffc86bd9560c9c2f86dc4309/raw/011f883774de18547d13331e1887bae30047e0fa/gistfile1.txt");
+  client.get("/metanymie/portableguru/master/advice_syntax.json");
 
   // read the status code and body of the response
   statusCode = client.responseStatusCode();
@@ -217,4 +244,3 @@ String GetJson() {
   Serial.println(statusCode);
   return response;
 }
-
