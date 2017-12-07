@@ -26,12 +26,12 @@ long timer = 0;                          //timer to clear screen after being ina
 long newTimer = 0;
 long startupT = 0;
 
-//static char ssid[] = "ocadu-embedded";      //SSID of the wireless network at school
-//static char pass[] = "internetofthings";
-static char ssid[] = "SmartRG-ffb6";      //SSID of the wireless network at Roxanne's place
-static char pass[] = "3d369c7eb6";
+static char ssid[] = "ocadu-embedded";      //SSID of the wireless network at school
+static char pass[] = "internetofthings";
+//static char ssid[] = "SmartRG-ffb6";      //SSID of the wireless network at Roxanne's place
+//static char pass[] = "3d369c7eb6";
 
-char serverAddress[] = "raw.githubusercontent.com";  // server address
+char serverAddress[] = "rawgit.com";  // server address
 int port = 80;
 
 WiFiClient wifi;
@@ -61,7 +61,7 @@ void setup() {
 
   /***************************** OLED STUFF *****************************/
 
-  display.setFont(&TomThumb);
+  //display.setFont(&TomThumb);
 
   Serial.println("OLED FeatherWing test");              // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);            // initialize with the I2C addr 0x3C (for the 128x32)
@@ -174,7 +174,7 @@ void ask() {
 
   if (status = WL_CONNECTED) {
     display.print(randomAdvice());
-  }
+  } 
   else
   { advice = round(random(0, 6));                                              //randomise what advice is called
 
