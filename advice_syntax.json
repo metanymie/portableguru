@@ -1,0 +1,85 @@
+{
+	"origin": [
+		"#question# #Action# #person# #connector# #object# #punctuation#"
+	],
+	"Action": [
+		"use",
+		"stick",
+		"poke",
+		"hit",
+		"comfort",
+		"loosen",
+		"talk to",
+		"tighten"
+	],
+	"object": [
+		"a pineapple",
+		"Duct-Tape",
+		"whiskey",
+		"hot coffee",
+		"warm mittens",
+		"a bigger stick",
+		"a heavier hammer",
+		"drugs ... more Drugs",
+		"a fuzzy puppy",
+		"a furry kitten",
+		"a banana"
+	],
+	"connector": [
+		"by",
+		"with",
+		"over"
+	],
+	"question": [
+		"Have you tried ",
+		"Maybe you should ",
+		"You could always ",
+		"The solution is ",
+		"I know! Just "
+	],
+	"punctuation": [
+		". Who cares.",
+		". AS IF!",
+		". Does it matter?",
+		". Do you really think so?",
+		"... but it's a waste of time.",
+		"... but what would it serve?",
+		"... but what if that never happened?",
+		"... but this would never happen.",
+		". What's the purpose, tho?",
+		". Wasting your time...",
+		". Nothing matters.",
+		". But... why?",
+		". HahaAHAHAHA",
+		"... LOL",
+		". Bite a bullet.",
+		". Who cares, tho.",
+		". Who do you think you are.",
+		". You'll get hurt.",
+		". You'll never be ready.",
+		". You cannot win.",
+		". Maybe that's the solution.",
+		". Way to go.",
+		". You can do it.",
+		". I believe in you.",
+		". It's the right choice.",
+		"Or... maybe not.",
+		". You know what? Yeah !",
+		". Alea jacta es!",
+		"Fate is sealed.",
+		". The tables have turned.",
+		". That's what's in store.",
+		". Be careful!",
+		". That's right!",
+		". A good omen.",
+		". And that's good.",
+		". I trust in you.",
+		". That's just what's best.",
+		". A bad omen."
+	],
+	"person": [
+		"him",
+		"her",
+		"it"
+	]
+}
